@@ -168,6 +168,12 @@ export function reset_ui_state() {
     hide_mark_as_read_turned_off_banner();
 }
 
+export function handle_middle_pane_transition() {
+    if (compose_state.composing) {
+        compose_actions.update_narrow_to_recipient_visibility();
+    }
+}
+
 export function activate(raw_operators, opts) {
     /* Main entry point for switching to a new view / message list.
        Note that for historical reasons related to the current
@@ -479,6 +485,8 @@ export function activate(raw_operators, opts) {
     $("body").addClass("narrowed_view");
     $("#zfilt").addClass("focused_table");
     $("#zhome").removeClass("focused_table");
+
+    handle_middle_pane_transition();
 
     ui_util.change_tab_to("#message_feed_container");
     message_list.set_narrowed(msg_list);
@@ -1031,6 +1039,7 @@ export function deactivate(coming_from_recent_topics = false) {
     condense.condense_and_collapse($("#zhome div.message_row"));
 
     reset_ui_state();
+    handle_middle_pane_transition();
     hashchange.save_narrow();
 
     if (message_lists.current.selected_id() !== -1) {

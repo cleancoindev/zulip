@@ -136,6 +136,30 @@ export function expand_compose_box() {
     $(".message_comp").show();
 }
 
+function composing_to_current_topic_narrow() {
+    const stream_name = compose_state.stream_name();
+    const topic = compose_state.topic() || undefined;
+    return narrow_state.stream() === stream_name && narrow_state.topic() === topic;
+}
+
+export function update_narrow_to_recipient_visibility() {
+    const message_type = compose_state.get_message_type();
+    if (message_type === "stream") {
+        const stream_name = compose_state.stream_name();
+        const stream_exists = Boolean(stream_data.get_stream_id(stream_name));
+
+        if (
+            stream_exists &&
+            !composing_to_current_topic_narrow() &&
+            !compose_state.is_topic_field_empty()
+        ) {
+            $(".narrow_to_compose_recipients").show();
+            return;
+        }
+    }
+    $(".narrow_to_compose_recipients").hide();
+}
+
 export function complete_starting_tasks(msg_type, opts) {
     // This is sort of a kitchen sink function, and it's called only
     // by compose.start() for now.  Having this as a separate function
@@ -146,6 +170,7 @@ export function complete_starting_tasks(msg_type, opts) {
     stream_bar.decorate(opts.stream, $("#stream-message .message_header_stream"), true);
     $(document).trigger(new $.Event("compose_started.zulip", opts));
     update_placeholder_text();
+    update_narrow_to_recipient_visibility();
 }
 
 export function maybe_scroll_up_selected_message() {
