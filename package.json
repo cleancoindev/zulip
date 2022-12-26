@@ -22,7 +22,7 @@
     "@zxcvbn-ts/language-en": "^2.0.0",
     "autoprefixer": "^10.0.0",
     "autosize": "^5.0.1",
-    "babel-loader": "^8.0.6",
+    "babel-loader": "^8.2.4",
     "babel-plugin-formatjs": "^10.2.6",
     "blueimp-md5": "^2.10.0",
     "clean-css": "^5.1.0",
